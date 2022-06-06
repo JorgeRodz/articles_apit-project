@@ -39,4 +39,37 @@ RSpec.describe Article, type: :model do
     end
 
   end
+
+  describe "model scope methods" do
+    it "return newly created articles to olderst ones" do
+      older_article = create(:article, created_at: 1.hour.ago)
+      recent_article = create(:article)
+
+      listing_articles = Article.recent
+      pp listing_articles
+
+      # rspec_core -> described_class = Article
+      expect(described_class.recent).to(
+        eq([recent_article, older_article])
+      )
+
+      puts "**************************"
+      # pp described_class = Article
+      p described_class
+      puts "**************************"
+
+
+      recent_article.update_column(:created_at, 2.hours.ago)
+
+      listing_articles = Article.recent
+      pp listing_articles
+
+      # rspec_core -> described_class = Article
+      expect(described_class.recent).to(
+        eq([older_article, recent_article])
+      )
+
+    end
+
+  end
 end
