@@ -28,13 +28,28 @@ RSpec.describe ArticlesController do
 
     it "returns newly created articles to oldest ones" do
       older_article = create(:article, created_at: 1.hour.ago)
-      pp older_article.attributes
+      # pp older_article.attributes
       recent_article = create(:article)
-      pp recent_article.attributes
+      # pp recent_article.attributes
 
       get '/articles'
       ids = json_data.map { |item| item[:id].to_i }
       expect(ids).to eql([recent_article.id, older_article.id])
     end
+
+    it 'paginates results' do
+      article1, article2, article3 = create_list(:article, 3) # crate_list -> factory_bot method
+      get '/articles', params: { page: { number: 2, size: 1 } }
+      expect(json_data.length).to eq(1)
+      expect(json_data.first[:id]).to eq(article2.id)
+    end
+
+    it 'contains pagination links in the response' do
+      article1, article2, article3 = create_list(:article, 3) # crate_list -> factory_bot method
+      get '/articles', params: { page: { number: 2, size: 1 } }
+      expect(json['links'].length).to eq(5)
+      expect(json['links'].keys).to contain_exactly('self','first','prev','next','last') # contain_exactly -> rspec_expectations
+    end
+
   end
 end
