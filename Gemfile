@@ -28,6 +28,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # Own gems added
 gem 'jsonapi-serializer'
 gem 'awesome_print' # to print in a formated way on console
+gem 'jsom-pagination' # to add pagination to our json response
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
