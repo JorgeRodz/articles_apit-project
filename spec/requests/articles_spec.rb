@@ -17,7 +17,7 @@ RSpec.describe ArticlesController do
       # pp expected
       aggregate_failures do
         expect(expected[:id]).to eq(article.id.to_s)
-        expect(expected[:type]).to eq('articles')
+        expect(expected[:type]).to eq('article')
         expect(expected[:attributes]).to eq(
           title: article.title,
           content: article.content,
@@ -41,14 +41,14 @@ RSpec.describe ArticlesController do
       article1, article2, article3 = create_list(:article, 3) # crate_list -> factory_bot method
       get '/articles', params: { page: { number: 2, size: 1 } }
       expect(json_data.length).to eq(1)
-      expect(json_data.first[:id]).to eq(article2.id)
+      expect(json_data.first[:id]).to eq(article2.id.to_s)
     end
 
     it 'contains pagination links in the response' do
       article1, article2, article3 = create_list(:article, 3) # crate_list -> factory_bot method
       get '/articles', params: { page: { number: 2, size: 1 } }
-      expect(json['links'].length).to eq(5)
-      expect(json['links'].keys).to contain_exactly('self','first','prev','next','last') # contain_exactly -> rspec_expectations
+      expect(json[:links].length).to eq(5)
+      expect(json[:links].keys).to contain_exactly(:first,:prev,:self,:next,:last) # contain_exactly -> rspec_expectations
     end
 
   end

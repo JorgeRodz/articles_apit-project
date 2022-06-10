@@ -1,10 +1,12 @@
 class ArticlesController < ApplicationController
+  include Paginable
 
   def index
-    articles = Article.recent # call in the scope -> recent (on article model)
-    render json: serializer.new(articles), status: :ok  # 200
+    paginated = paginate(Article.recent) # call in the scope -> recent (on article model)
+    render_collection(paginated) # method call to concerns/paginable.rb
   end
 
+  # method necessary to serializer a json with the json:api standard response
   def serializer
     ArticleSerializer
   end
